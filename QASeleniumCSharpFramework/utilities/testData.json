@@ -1,7 +1,7 @@
 {
   "username": "rahulshettyacademy",
   "password": "learning",
-  "wrong_username": "rahulshetfdsstyacademy",
+  "wrong_username": "rahulshettyacademy",
   "wrong_password": "learn",
   "products": [ "iphone X", "Blackberry" ],
   "products_second": [ "Samsung Note 8", "Nokia Edge" ]
