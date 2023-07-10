@@ -2,7 +2,7 @@
   "username": "rahulshettyacademy",
   "password": "learning",
   "wrong_username": "rahulshettyacademy",
-  "wrong_password": "learn",
+  "wrong_password": "learning",
   "products": [ "iphone X", "Blackberry" ],
   "products_second": [ "Samsung Note 8", "Nokia Edge" ]
 
