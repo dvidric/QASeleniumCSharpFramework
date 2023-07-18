@@ -8,42 +8,25 @@ using System.Threading.Tasks;
 
 namespace QASeleniumCSharpFramework.pageObjects
 {   
-    public class LoginPage
+    public class LoginPage: BasePage
 
     {
-        private IWebDriver driver;
-        public LoginPage(IWebDriver driver)
+        
+        public LoginPage(IWebDriver driver): base (driver) { }
+
+        private readonly By _username = By.Id("username");
+        private readonly By _password = By.Id("password");
+        private readonly By _checkBox = By.XPath("//input[@id='terms']");
+        private readonly By _signInButton = By.XPath("//input[@id='signInBtn']");
+
+        public ProductsPage ValidLogin(string user, string pass)
         {
-            this.driver = driver;
-            PageFactory.InitElements(driver, this);
-        }
-
-        // PageObject Factory design pattern
-        [FindsBy(How = How.Id, Using = "username")]
-        private IWebElement username;
-
-        [FindsBy(How = How.Id, Using = "password")]
-        private IWebElement password;
-
-        [FindsBy(How = How.XPath, Using = "//input[@id='terms']")]
-        private IWebElement checkBox;
-
-        [FindsBy(How = How.XPath, Using = "//input[@id='signInBtn']")]
-        private IWebElement signInButton;
-
-        public ProductsPage validLogin(string user, string pass)
-        {
-            username.SendKeys(user);
-            password.SendKeys(pass);
-            checkBox.Click();
-            signInButton.Click();
+            Type(_username, TimeSpan.MinValue, user);
+            Type(_password, TimeSpan.MinValue, pass);
+            Click(_checkBox, TimeSpan.MinValue, false);
+            Click(_signInButton, TimeSpan.MinValue, false);
             return new ProductsPage(driver);
 
-        }
-
-        public IWebElement getUserName()
-        {
-            return username;
         }
     }
     

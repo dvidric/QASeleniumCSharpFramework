@@ -20,78 +20,53 @@ namespace QASeleniumCSharpFramework.tests
             string[] actualProducts = new string[2];
             LoginPage loginPage = new LoginPage(getDriver());
 
-            ProductsPage productsPage = loginPage.validLogin(username, password);
-            productsPage.waitForPageToDisplay();
+            ProductsPage productsPage = loginPage.ValidLogin(username, password);
+            productsPage.WaitForProductPageToDisplay();
 
-            IList<IWebElement> products = productsPage.getCards();
+            productsPage.AddProductsToCart(expectedProducts);
+            Thread.Sleep(1500);
+            CheckOutPage checkoutPage = productsPage.GoToCheckOut();
 
-
-            foreach (IWebElement product in products)
+            for (int i = 0; i < checkoutPage.GetCheckOutCards().Count(); i++)
             {
-                if (expectedProducts.Contains(product.FindElement(productsPage.getCardTitle()).Text))
-                {
-                    product.FindElement(productsPage.getAddToCart()).Click();
-                }
-
-            }
-            CheckOutPage checkoutPage = productsPage.checkOut();
-
-            for (int i = 0; i < checkoutPage.getCheckOutCards().Count; i++)
-            {
-                actualProducts[i] = checkoutPage.getCheckOutCards()[i].Text;
+                actualProducts[i] = checkoutPage.GetCheckOutCards()[i];
 
             }
 
             Assert.AreEqual(expectedProducts, actualProducts);
-            PhotoCommercePage photoCommercePage = checkoutPage.proceedCheckOut();
-            photoCommercePage.getCountry().SendKeys("Ind");
-            photoCommercePage.waitForFullNameCountry();
-            photoCommercePage.getindiaOption().Click();
-            photoCommercePage.getAgreeTermsAndCond().Click();
-            photoCommercePage.getPurchase().Click();
-            string confirmText = photoCommercePage.getAlertText().Text;
-            StringAssert.Contains("Success", confirmText);
+            PhotoCommercePage photoCommercePage = checkoutPage.ProceedCheckOut();
+            photoCommercePage.ChooseCountry("India");
+            photoCommercePage.ClickOnAgreeTerms();
+            photoCommercePage.ClickOnPurchase();
+            Assert.IsTrue(photoCommercePage.CheckAlertText("Success"));
 
 
         }
-        [Test, Category("Dragana")]
+        [Test, Category("dragana")]
         public void TestSample()
         {
-            string[] expectedProducts = { "Samsung Note 8", "Nokia Edge" };
+            string[] expectedProducts = { "iphone X", "Blackberry" };
             string[] actualProducts = new string[2];
             LoginPage loginPage = new LoginPage(getDriver());
 
-            ProductsPage productsPage = loginPage.validLogin("rahulshettyacademy", "learning");
-            productsPage.waitForPageToDisplay();
+            ProductsPage productsPage = loginPage.ValidLogin("rahulshettyacademy", "learning");
+            productsPage.WaitForProductPageToDisplay();
 
-            IList<IWebElement> products = productsPage.getCards();
+            productsPage.AddProductsToCart(expectedProducts);
+            CheckOutPage checkoutPage = productsPage.GoToCheckOut();
 
-
-            foreach (IWebElement product in products)
+            for (int i = 0; i < checkoutPage.GetCheckOutCards().Count(); i++)
             {
-                if (expectedProducts.Contains(product.FindElement(productsPage.getCardTitle()).Text))
-                {
-                    product.FindElement(productsPage.getAddToCart()).Click();
-                }
-
-            }
-            CheckOutPage checkoutPage = productsPage.checkOut();
-
-            for (int i = 0; i < checkoutPage.getCheckOutCards().Count; i++)
-            {
-                actualProducts[i] = checkoutPage.getCheckOutCards()[i].Text;
+                actualProducts[i] = checkoutPage.GetCheckOutCards()[i];
 
             }
 
             Assert.AreEqual(expectedProducts, actualProducts);
-            PhotoCommercePage photoCommercePage = checkoutPage.proceedCheckOut();
-            photoCommercePage.getCountry().SendKeys("Ind");
-            photoCommercePage.waitForFullNameCountry();
-            photoCommercePage.getindiaOption().Click();
-            photoCommercePage.getAgreeTermsAndCond().Click();
-            photoCommercePage.getPurchase().Click();
-            string confirmText = photoCommercePage.getAlertText().Text;
-            StringAssert.Contains("Success", confirmText);
+            PhotoCommercePage photoCommercePage = checkoutPage.ProceedCheckOut();
+            photoCommercePage.ChooseCountry("India");
+            photoCommercePage.ClickOnAgreeTerms();
+            photoCommercePage.ClickOnPurchase();
+            Assert.IsTrue(photoCommercePage.CheckAlertText("Success"));
 
 
         }

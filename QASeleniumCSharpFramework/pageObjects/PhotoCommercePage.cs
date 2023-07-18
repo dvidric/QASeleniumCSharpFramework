@@ -9,65 +9,52 @@ using System.Threading.Tasks;
 
 namespace QASeleniumCSharpFramework.pageObjects
 {
-    public class PhotoCommercePage
+    public class PhotoCommercePage: BasePage
     {
-        IWebDriver driver;
-        public PhotoCommercePage(IWebDriver driver) 
-        {
-            this.driver = driver;
-            PageFactory.InitElements(driver, this);
 
+        public PhotoCommercePage(IWebDriver driver) : base(driver) { }
+        private readonly By _country = By.Id("country");
+        private readonly By _agreeTermsAndCond = By.CssSelector("label[for*='checkbox2']");
+        private readonly By _purchase = By.CssSelector("[value='Purchase']");
+        private readonly By _alertText = By.CssSelector(".alert-success");
+        private readonly By _photoCommerceHomeButton = By.XPath("//a[contains(text(),'ProtoCommerce Home')]");
+
+        private By loc_country(string country)
+        {
+            return By.LinkText($"{country}");
         }
 
-        //driver.FindElement(By.Id("country")).SendKeys("ind");
-        [FindsBy(How = How.Id, Using = "country")]
-        private IWebElement country;
-
-        //driver.FindElement(By.LinkText("India")).Click();
-        [FindsBy(How = How.LinkText, Using = "India")]
-        private IWebElement indiaOption;
-
-        //driver.FindElement(By.CssSelector("label[for*='checkbox2']")).Click();
-        [FindsBy(How = How.CssSelector, Using = "label[for*='checkbox2']")]
-        private IWebElement agreeTermsAndCond;
-
-        //driver.FindElement(By.CssSelector("[value='Purchase']")).Click();
-        [FindsBy(How = How.CssSelector, Using = "[value='Purchase']")]
-        private IWebElement purchase;
-
-        //driver.FindElement(By.CssSelector(".alert-success"))
-        [FindsBy(How = How.CssSelector, Using = ".alert-success")]
-        private IWebElement alertText;
-
-
-        public void waitForFullNameCountry() 
+        public Boolean CheckAlertText(string checkValue)
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.LinkText("India")));
+            return CheckElementText(_alertText, TimeSpan.MinValue, checkValue);
         }
 
-        public IWebElement getCountry()
+        public void ChooseCountry(string country)
         {
-            return country;
-        }
-        public IWebElement getindiaOption()
-        {
-            return indiaOption;
+            By loc = loc_country(country);
+            Type(_country, TimeSpan.MinValue, country);
+            Click(loc_country(country), TimeSpan.FromSeconds(12), false);
         }
 
-        public IWebElement getAgreeTermsAndCond()
+        public void ClickOnAgreeTerms()
         {
-            return agreeTermsAndCond;
+            Click(_agreeTermsAndCond, TimeSpan.MinValue, false);
         }
 
-        public IWebElement getPurchase()
+        public void ClickOnPurchase()
         {
-            return purchase;
+            Click(_purchase, TimeSpan.MinValue, false);
         }
 
-        public IWebElement getAlertText()
+
+
+
+
+        public AngularPracticePage ProceedToAngularPracticePage()
         {
-            return alertText;
+            Click(_photoCommerceHomeButton, TimeSpan.MinValue, true);
+            return new AngularPracticePage(driver);
+
         }
 
     }

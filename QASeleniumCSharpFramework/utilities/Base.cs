@@ -15,6 +15,7 @@ using AventStack.ExtentReports.Reporter;
 using AventStack.ExtentReports;
 using NUnit.Framework.Interfaces;
 using OpenQA.Selenium.DevTools.V112.Page;
+using QASeleniumCSharpFramework.Configuration;
 
 namespace QASeleniumCSharpFramework.utilities
 {
@@ -50,16 +51,16 @@ namespace QASeleniumCSharpFramework.utilities
         public void StartBrowser()
         {
             test = extent.CreateTest(TestContext.CurrentContext.Test.Name);
-            browserName = TestContext.Parameters["browserName"];
+            //browserName = TestContext.Parameters["browserName"];
             if (browserName == null) 
             {
-                browserName = ConfigurationManager.AppSettings["browser"];
+                browserName = ConfigurationProvider.Configuration["browser"];
             }
             
             InitBrowser(browserName);
             driver.Value.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             driver.Value.Manage().Window.Maximize();
-            driver.Value.Url = "https://rahulshettyacademy.com/loginpagePractise/";
+            driver.Value.Url = ConfigurationProvider.Configuration["applicationURL"];
         }
 
         public IWebDriver getDriver()
@@ -74,20 +75,38 @@ namespace QASeleniumCSharpFramework.utilities
             {
                 case "Firefox":
                     new WebDriverManager.DriverManager().SetUpDriver(new FirefoxConfig());
-                    driver.Value = new FirefoxDriver();
+                    var firefoxOptions = new FirefoxOptions();
+                    firefoxOptions.AddArguments(GetBrowserArguments());
+                    driver.Value = new FirefoxDriver(firefoxOptions);
                     break;
 
                 case "Chrome":
                     new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
-                    driver.Value = new ChromeDriver();
+                    var chromeOptions = new ChromeOptions();
+                    chromeOptions.AddArguments(GetBrowserArguments());
+                    chromeOptions.AddArgument("--headless");
+                    chromeOptions.AddArgument("--window-size=1920,1080");
+                    driver.Value = new ChromeDriver(chromeOptions);
                     break;
 
                 case "Edge":
                     new WebDriverManager.DriverManager().SetUpDriver(new EdgeConfig());
-                    driver.Value = new EdgeDriver();
+                    var edgeOptions = new EdgeOptions();
+                    edgeOptions.AddArguments(GetBrowserArguments());
+                    driver.Value = new EdgeDriver(edgeOptions);
                     break;
 
             }
+
+        }
+
+        public string[] GetBrowserArguments()
+        {
+            if (ConfigurationProvider.Configuration["browserArguments"] != null)
+            {
+                return ConfigurationProvider.Configuration["browserArguments"].Split(",");
+            }
+            return Array.Empty<string>();
 
         }
         public static jsonReader getDataParser() 
